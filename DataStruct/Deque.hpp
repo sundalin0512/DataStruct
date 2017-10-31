@@ -6,7 +6,7 @@ namespace Sdalin
 	public:
 		class iterator
 		{
-
+			
 		};
 		// construct/copy/destroy:
 		Deque();
@@ -63,5 +63,19 @@ namespace Sdalin
 		iterator erase(iterator first, iterator last);
 		void     swap(Deque<T>&);
 		void     clear() noexcept;
+
+	protected:
+
+
+
+	protected:
+		static const size_t minDequeMapSize = 8;	/* minimum map size, at least 1 */
+		static const size_t dequeBlockSize =
+				 (sizeof(T) <= 1 ? 16
+				: sizeof(T) <= 2 ? 8
+				: sizeof(T) <= 4 ? 4
+				: sizeof(T) <= 8 ? 2
+				: 1);	/* elements per block (a power of 2) */
+		
 	};
 }
