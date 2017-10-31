@@ -2,7 +2,7 @@
 namespace Sdalin
 {
 	template <class T>
-	class list {
+	class List {
 	private:
 
 		struct Node
@@ -11,10 +11,7 @@ namespace Sdalin
 			Node* m_pPre;
 			T m_data;
 			Node() = default;
-			Node(const T& other)
-			{
-				m_data = other;
-			}
+			Node(const T& other);
 		};
 		Node m_node;
 		size_t m_size;
@@ -23,23 +20,11 @@ namespace Sdalin
 		class iterator
 		{
 		public:
-			iterator()
-			{
-				node = nullptr;
-			}
-			iterator(iterator& other)
-			{
-				node = other.node;
-			}
-			iterator(Node* node)
-			{
-				this->node = node;
-			}
+			iterator();
+			iterator(iterator& other);
+			iterator(Node* node);
 
-			~iterator()
-			{
-
-			}
+			~iterator();
 			iterator& operator ++ ()
 			{
 				node = node->m_pNext;
@@ -78,46 +63,19 @@ namespace Sdalin
 				return node;
 			}
 
-			operator Node*() const
-			{
-				return node;
-			}
+			operator Node*() const;
 		protected:
 			Node* node;
 		};
 	public:
 		// construct/copy/destroy:
-		list()
-		{
-			m_node.m_pNext = &m_node;
-			m_node.m_pPre = &m_node;
-			m_node.m_data = T();
-			m_size = 0;
-		}
-		explicit list(int  n) : list()
-		{
-			insert(end(), n, T());
-		}
-		list(size_t n, const T& value) : list()
-		{
-			insert(end(), n, value);
-		}
-		list(const list<T>& x)
-		{
-			for (auto iter = x.begin(); iter != x.end(); iter++)
-			{
-				insert(end(), *iter);
-			}
-		}
-		~list()
-		{
-			for (auto iter = begin(); iter != end(); )
-			{
-				erase(iter++);
-			}
-		}
+		List();
+		explicit List(int  n);
+		List(size_t n, const T& value);
+		List(const List<T>& x);
+		~List();
 
-		list<T>& operator=(const list<T>& x)
+		List<T>& operator=(const List<T>& x)
 		{
 			erase(begin(), end());
 			for (auto iter = x.begin(); iter != x.end(); iter++)
@@ -126,187 +84,340 @@ namespace Sdalin
 			}
 			return *this;
 		}
-		void assign(size_t n, const T& t)
-		{
-			erase(begin(), end());
-			insert(end(), n, t);
-		}
+		void assign(size_t n, const T& t);
 
 		// iterators:
-		iterator                begin() noexcept
-		{
-			return m_node.m_pNext;
-		}
-		iterator          begin() const noexcept
-		{
-			return m_node.m_pNext;
-		}
+		iterator                begin() noexcept;
+		iterator          begin() const noexcept;
 
-		iterator                end() noexcept
-		{
-			return m_node.m_pPre;
-		}
-		iterator          end() const noexcept
-		{
-			return m_node.m_pPre;
-		}
+		iterator                end() noexcept;
+		iterator          end() const noexcept;
 
 		// capacity:
-		size_t size() const noexcept
-		{
-			return m_size;
-		}
+		size_t size() const noexcept;
 
-		size_t max_size() const noexcept
-		{
-			return (size_t() - 1) / sizeof(T);
-		}
+		size_t max_size() const noexcept;
 
-		void      resize(size_t sz)
-		{
-			if (size() > sz)
-			{
-				auto iter = begin();
-				for (size_t i = 0; i < size(); i++)
-					iter++;
-				auto tmp = iter;
-				while (++tmp != end())
-				{
-					erase(tmp);
-					tmp = iter;
-				}
-				erase(iter);
-			}
-			else
-			{
-				insert(end(), sz - size(), T());
-			}
-		}
+		void      resize(size_t sz);
 
-		void      resize(size_t sz, const T& c)
-		{
-			if (size() > sz)
-			{
-				auto iter = begin();
-				for (size_t i = 0; i < size(); i++)
-					iter++;
-				auto tmp = iter;
-				while (++tmp != end())
-				{
-					erase(tmp);
-					tmp = iter;
-				}
-				erase(iter);
-			}
-			else
-			{
-				insert(end(), sz - size(), T(c));
-			}
-		}
-		bool      empty() const noexcept
-		{
-			return size() == 0;
-		}
+		void      resize(size_t sz, const T& c);
+		bool      empty() const noexcept;
 
 		// element access:
-		T&       front()
-		{
-			return m_node.m_pNext->m_data;
-		}
-		const T& front() const
-		{
-			return m_node.m_pNext->m_data;
-		}
-		T&       back()
-		{
-			return m_node.m_pPre->m_data;
-		}
-		const T& back() const
-		{
-			return m_node.m_pPre->m_data;
-		}
+		T&       front();
+		const T& front() const;
+		T&       back();
+		const T& back() const;
 
 		// modifiers:
-		void pop_front()
-		{
-			erase(begin());
-		}
-		void push_front(const T& x)
-		{
-			insert(begin(), x);
-		}
-		void push_back(const T& x)
-		{
-			insert(end(), x);
-		}
-		void pop_back()
-		{
-			erase(end());
-		}
+		void pop_front();
+		void push_front(const T& x);
+		void push_back(const T& x);
+		void pop_back();
 
-		iterator insert(iterator position, const T& x)
-		{
-			auto tmp = new Node(x);
-			position->m_pPre->m_pNext = tmp;
-			tmp->m_pPre = position->m_pPre;
-			position->m_pPre = tmp;
-			tmp->m_pNext = position;
-			m_size++;
-			return tmp;
-		}
-		iterator insert(iterator position, size_t n, const T& x)
-		{
-			iterator ret;
-			for (size_t i = 0; i < n; i++)
-			{
-				ret = insert(position, x);
-			}
-			return ret;
-		}
+		iterator insert(iterator position, const T& x);
+		iterator insert(iterator position, size_t n, const T& x);
 
-		iterator erase(iterator position)
-		{
-			auto ret = position->m_pNext;
-			position->m_pNext->m_pPre = position->m_pPre;
-			position->m_pPre->m_pNext = position->m_pNext;
-			delete (Node*)position;
-			m_size--;
-			return ret;
-		}
-		iterator erase(iterator first, iterator last)
-		{
-			auto ret = last->m_pNext;
-			last->m_pNext->m_pPre = first->m_pPre;
-			first->m_pPre->m_pNext = last->m_pNext;
-			for (auto iter = first; iter != last;)
-			{
-				delete (Node*)++iter;
-				m_size--;
-			}
-			delete (Node*)first;
-			m_size--;
-			return ret;
-		}
-		void     swap(list<T>& right)
-		{
-			auto temp = right;
-			right = *this;
-			*this = temp;
-		}
-		void     clear() noexcept
-		{
-			for (auto iter = begin(); iter != end();)
-			{
-				delete (Node*)++iter;
-			}
-			delete (Node*)begin();
-			m_size = 0;
-			m_node.m_pNext = &m_node;
-			m_node.m_pPre = &m_node;
-		}
+		iterator erase(iterator position);
+		iterator erase(iterator first, iterator last);
+		void     swap(List<T>& right);
+		void     clear() noexcept;
 
 
 	};
+
+	template<class T>
+	List<T>::Node::Node(const T & other)
+	{
+		m_data = other;
+	}
+
+	template<class T>
+	List<T>::iterator::iterator()
+	{
+		node = nullptr;
+	}
+
+	template<class T>
+	inline List<T>::iterator::iterator(iterator & other)
+	{
+		node = other.node;
+	}
+
+	template<class T>
+	inline List<T>::iterator::iterator(Node * node)
+	{
+		this->node = node;
+	}
+
+	template<class T>
+	inline List<T>::iterator::~iterator()
+	{
+
+	}
+
+	template<class T>
+	inline List<T>::iterator::operator Node*() const
+	{
+		return node;
+	}
+
+
+	// construct/copy/destroy:
+	template<class T>
+	inline List<T>::List()
+	{
+		m_node.m_pNext = &m_node;
+		m_node.m_pPre = &m_node;
+		m_node.m_data = T();
+		m_size = 0;
+	}
+
+	template<class T>
+	inline List<T>::List(int n) : List()
+	{
+		insert(end(), n, T());
+	}
+
+	template<class T>
+	inline List<T>::List(size_t n, const T & value) : List()
+	{
+		insert(end(), n, value);
+	}
+
+	template<class T>
+	inline List<T>::List(const List<T>& x)
+	{
+		for (auto iter = x.begin(); iter != x.end(); iter++)
+		{
+			insert(end(), *iter);
+		}
+	}
+
+	template<class T>
+	inline List<T>::~List()
+	{
+		for (auto iter = begin(); iter != end(); )
+		{
+			erase(iter++);
+		}
+	}
+
+	template<class T>
+	inline void List<T>::assign(size_t n, const T & t)
+	{
+		erase(begin(), end());
+		insert(end(), n, t);
+	}
+
+	// iterators:
+	template<class T>
+	inline List<T>::iterator List<T>::begin() noexcept
+	{
+		return m_node.m_pNext;
+	}
+
+	template<class T>
+	inline List<T>::iterator List<T>::begin() const noexcept
+	{
+		return m_node.m_pNext;
+	}
+
+	template<class T>
+	inline List<T>::iterator List<T>::end() noexcept
+	{
+		return m_node.m_pPre;
+	}
+
+	template<class T>
+	inline List<T>::iterator List<T>::end() const noexcept
+	{
+		return m_node.m_pPre;
+	}
+
+	// capacity:
+	template<class T>
+	inline size_t List<T>::size() const noexcept
+	{
+		return m_size;
+	}
+
+	template<class T>
+	inline size_t List<T>::max_size() const noexcept
+	{
+		return (size_t() - 1) / sizeof(T);
+	}
+
+	template<class T>
+	inline void List<T>::resize(size_t sz)
+	{
+		if (size() > sz)
+		{
+			auto iter = begin();
+			for (size_t i = 0; i < size(); i++)
+				iter++;
+			auto tmp = iter;
+			while (++tmp != end())
+			{
+				erase(tmp);
+				tmp = iter;
+			}
+			erase(iter);
+		}
+		else
+		{
+			insert(end(), sz - size(), T());
+		}
+	}
+
+	template<class T>
+	inline void List<T>::resize(size_t sz, const T & c)
+	{
+		if (size() > sz)
+		{
+			auto iter = begin();
+			for (size_t i = 0; i < size(); i++)
+				iter++;
+			auto tmp = iter;
+			while (++tmp != end())
+			{
+				erase(tmp);
+				tmp = iter;
+			}
+			erase(iter);
+		}
+		else
+		{
+			insert(end(), sz - size(), T(c));
+		}
+	}
+
+	template<class T>
+	inline bool List<T>::empty() const noexcept
+	{
+		return size() == 0;
+	}
+
+	// element access:
+	template<class T>
+	inline T & List<T>::front()
+	{
+		return m_node.m_pNext->m_data;
+	}
+
+	template<class T>
+	inline const T & List<T>::front() const
+	{
+		return m_node.m_pNext->m_data;
+	}
+
+	template<class T>
+	inline T & List<T>::back()
+	{
+		return m_node.m_pPre->m_data;
+	}
+
+	template<class T>
+	inline const T & List<T>::back() const
+	{
+		return m_node.m_pPre->m_data;
+	}
+
+	// modifiers:
+	template<class T>
+	inline void List<T>::pop_front()
+	{
+		erase(begin());
+	}
+
+	template<class T>
+	inline void List<T>::push_front(const T & x)
+	{
+		insert(begin(), x);
+	}
+
+	template<class T>
+	inline void List<T>::push_back(const T & x)
+	{
+		insert(end(), x);
+	}
+
+	template<class T>
+	inline void List<T>::pop_back()
+	{
+		erase(end());
+	}
+
+	template<class T>
+	inline List<T>::iterator List<T>::insert(List<T>::iterator position, const T & x)
+	{
+		auto tmp = new Node(x);
+		position->m_pPre->m_pNext = tmp;
+		tmp->m_pPre = position->m_pPre;
+		position->m_pPre = tmp;
+		tmp->m_pNext = position;
+		m_size++;
+		return tmp;
+	}
+
+	template<class T>
+	inline List<T>::iterator List<T>::insert(List<T>::iterator position, size_t n, const T & x)
+	{
+		List<T>::iterator ret;
+		for (size_t i = 0; i < n; i++)
+		{
+			ret = insert(position, x);
+		}
+		return ret;
+	}
+
+	template<class T>
+	inline List<T>::iterator List<T>::erase(List<T>::iterator position)
+	{
+		auto ret = position->m_pNext;
+		position->m_pNext->m_pPre = position->m_pPre;
+		position->m_pPre->m_pNext = position->m_pNext;
+		delete (Node*)position;
+		m_size--;
+		return ret;
+	}
+
+	template<class T>
+	inline List<T>::iterator List<T>::erase(List<T>::iterator first, List<T>::iterator last)
+	{
+		auto ret = last->m_pNext;
+		last->m_pNext->m_pPre = first->m_pPre;
+		first->m_pPre->m_pNext = last->m_pNext;
+		for (auto iter = first; iter != last;)
+		{
+			delete (Node*)++iter;
+			m_size--;
+		}
+		delete (Node*)first;
+		m_size--;
+		return ret;
+	}
+
+	template<class T>
+	inline void List<T>::swap(List<T>& right)
+	{
+		auto temp = right;
+		right = *this;
+		*this = temp;
+	}
+
+	template<class T>
+	inline void List<T>::clear() noexcept
+	{
+		for (auto iter = begin(); iter != end();)
+		{
+			delete (Node*)++iter;
+		}
+		delete (Node*)begin();
+		m_size = 0;
+		m_node.m_pNext = &m_node;
+		m_node.m_pPre = &m_node;
+	}
 
 }
 

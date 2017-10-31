@@ -21,5 +21,19 @@
     <ClInclude Include="Vector.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Stack.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Queue.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Deque.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
