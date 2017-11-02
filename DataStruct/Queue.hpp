@@ -1,8 +1,10 @@
 #pragma once
-#include "Deque.hpp"
+#include <deque>
+//#include "Deque.hpp"
 namespace Sdalin
 {
-	template <class T, class Container = Deque<T> >
+	//template <class T, class Container = Deque<T> >
+	template <class T, class Container = std::deque<T> >
 	class Queue {
 	protected:
 		Container c;
@@ -35,7 +37,7 @@ namespace Sdalin
 		const T& back() const {
 			return c.back();
 		}
-		void push(const value_type& x) {
+		void push(const T& x) {
 			c.push_back(x);
 		}
 		void pop() {

@@ -11,7 +11,7 @@ namespace Sdalin
 			Node* m_pPre;
 			T m_data;
 			Node() = default;
-			Node(const T& other);
+			Node(const Node& other);
 		};
 		Node m_node;
 		size_t m_size;
@@ -78,7 +78,7 @@ namespace Sdalin
 		List<T>& operator=(const List<T>& x)
 		{
 			erase(begin(), end());
-			for (auto iter = x.begin(); iter != x.end(); iter++)
+			for (auto iter = x.begin(); iter != x.end(); ++iter)
 			{
 				insert(end(), *iter);
 			}
@@ -127,9 +127,9 @@ namespace Sdalin
 	};
 
 	template<class T>
-	List<T>::Node::Node(const T & other)
+	List<T>::Node::Node(const Node & other)
 	{
-		m_data = other;
+		m_data = other.m_data;
 	}
 
 	template<class T>
@@ -188,7 +188,7 @@ namespace Sdalin
 	template<class T>
 	List<T>::List(const List<T>& x)
 	{
-		for (auto iter = x.begin(); iter != x.end(); iter++)
+		for (auto iter = x.begin(); iter != x.end(); ++iter)
 		{
 			insert(end(), *iter);
 		}
@@ -255,7 +255,7 @@ namespace Sdalin
 		{
 			auto iter = begin();
 			for (size_t i = 0; i < size(); i++)
-				iter++;
+				++iter;
 			auto tmp = iter;
 			while (++tmp != end())
 			{
@@ -277,7 +277,7 @@ namespace Sdalin
 		{
 			auto iter = begin();
 			for (size_t i = 0; i < size(); i++)
-				iter++;
+				++iter;
 			auto tmp = iter;
 			while (++tmp != end())
 			{
