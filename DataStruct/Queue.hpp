@@ -1,10 +1,13 @@
 #pragma once
-#include <deque>
+
 //#include "Deque.hpp"
+//#include <deque>
+#include "List.hpp"
 namespace Sdalin
 {
 	//template <class T, class Container = Deque<T> >
-	template <class T, class Container = std::deque<T> >
+	//template <class T, class Container = std::deque<T> >
+	template <class T, class Container = List<T> >
 	class Queue {
 	protected:
 		Container c;

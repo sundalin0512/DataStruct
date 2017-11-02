@@ -1,5 +1,5 @@
 #include "bTree.hpp"
-
+#include <map>
 using namespace std;
 
 int main()
@@ -13,6 +13,8 @@ int main()
 	a.insert(55);
 	a.insert(75);
 	a.insert(54);
+	//a.erase(54);
+	//a.insert(54);
 
 	//DLR: 50  30  10  40  60  55  54  75 
 	Sdalin::Queue<Sdalin::BTree<int>::Node*> a1 = a.DLR();

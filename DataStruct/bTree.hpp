@@ -12,15 +12,15 @@ namespace Sdalin {
 	public:
 		struct Node
 		{
-			Node* m_pParent;
-			Node* m_pLeft;
-			Node* m_pRight;
+			Node* m_parent;
+			Node* m_left;
+			Node* m_right;
 			T m_data;
 			Node()
 			{
-				m_pParent = nullptr;
-				m_pLeft = nullptr;
-				m_pRight = nullptr;
+				m_parent = nullptr;
+				m_left = nullptr;
+				m_right = nullptr;
 			}
 
 			explicit Node(const Node& other) : Node()
@@ -40,7 +40,7 @@ namespace Sdalin {
 		BTree()
 			: m_root(new Node), m_size(0)
 		{
-			m_root->m_pParent = nullptr;
+			root() = nullptr;
 		}
 		BTree(const BTree& other)
 		{
@@ -70,13 +70,13 @@ namespace Sdalin {
 		Node* insert(const T& data)
 		{
 			Node* node = new Node(data);
-			if (m_root->m_pParent == nullptr)
+			if (root() == nullptr)
 			{
-				m_root->m_pParent = node;
-				m_root->m_pParent->m_pParent = m_root;
-				return m_root->m_pParent;
+				root() = node;
+				root()->m_parent = m_root;
+				return root();
 			}
-			Node* parent = m_root->m_pParent;
+			Node* parent = root();
 			Node* nextNode = parent;
 			while (nextNode != nullptr)
 			{
@@ -87,20 +87,22 @@ namespace Sdalin {
 				}
 				else if (parent->m_data > data)
 				{
-					nextNode = parent->m_pLeft;
+					nextNode = parent->m_left;
 				}
 				else if (parent->m_data < data)
 				{
-					nextNode = parent->m_pRight;
+					nextNode = parent->m_right;
 				}
 			}
 			if (parent->m_data > data)
 			{
-				parent->m_pLeft = node;
+				parent->m_left = node;
+				node->m_parent = parent;
 			}
 			else if (parent->m_data < data)
 			{
-				parent->m_pRight = node;
+				parent->m_right = node;
+				node->m_parent = parent;
 			}
 			m_size++;
 			return node;
@@ -128,7 +130,7 @@ namespace Sdalin {
 
 		Node* query(const T& data)
 		{
-			Node* parent = m_root->m_pParent;
+			Node* parent = root();
 			if (parent == nullptr)
 				return nullptr;
 			Node* nextNode = parent;
@@ -141,11 +143,11 @@ namespace Sdalin {
 				}
 				else if (parent->m_data > data)
 				{
-					nextNode = parent->m_pLeft;
+					nextNode = parent->m_left;
 				}
 				else if (parent->m_data < data)
 				{
-					nextNode = parent->m_pRight;
+					nextNode = parent->m_right;
 				}
 			}
 			return nullptr;
@@ -156,27 +158,27 @@ namespace Sdalin {
 		{
 			Queue<Node*> myQueue;
 			Queue<Node*> retQueue;
-			if (m_root->m_pParent == nullptr)
+			if (root() == nullptr)
 			{
 				return myQueue;
 			}
 
-			myQueue.push(m_root->m_pParent);
-			retQueue.push(m_root->m_pParent);
+			myQueue.push(root());
+			retQueue.push(root());
 
 			while (!myQueue.empty())
 			{
 				Node* pNode = myQueue.front();
-				if (pNode->m_pLeft != nullptr)
+				if (pNode->m_left != nullptr)
 				{
-					myQueue.push(pNode->m_pLeft);
-					retQueue.push(pNode->m_pLeft);
+					myQueue.push(pNode->m_left);
+					retQueue.push(pNode->m_left);
 				}
 
-				if (pNode->m_pRight != nullptr)
+				if (pNode->m_right != nullptr)
 				{
-					myQueue.push(pNode->m_pRight);
-					retQueue.push(pNode->m_pRight);
+					myQueue.push(pNode->m_right);
+					retQueue.push(pNode->m_right);
 				}
 
 				myQueue.pop();
@@ -190,11 +192,11 @@ namespace Sdalin {
 		{
 			Stack<Node*> myStack;
 			Queue<Node*> retQueue;
-			if (m_root->m_pParent == nullptr)
+			if (root() == nullptr)
 			{
 				return retQueue;
 			}
-			myStack.push(m_root->m_pParent);
+			myStack.push(root());
 			Node* pNode = myStack.top();
 			while (!myStack.empty())
 			{
@@ -202,13 +204,13 @@ namespace Sdalin {
 				{
 					retQueue.push(pNode);
 					myStack.push(pNode);
-					pNode = pNode->m_pLeft;
+					pNode = pNode->m_left;
 				}
 				if (!myStack.empty())
 				{
 					pNode = myStack.top();
 					myStack.pop();
-					pNode = pNode->m_pRight;
+					pNode = pNode->m_right;
 				}
 			}
 			return retQueue;
@@ -219,29 +221,28 @@ namespace Sdalin {
 		{
 			Stack<Node*> myStack;
 			Queue<Node*> retQueue;
-			if (m_root->m_pParent == nullptr)
+			if (root() == nullptr)
 			{
 				return retQueue;
 			}
-			myStack.push(m_root->m_pParent);
+			myStack.push(root());
 			Node* pNode = myStack.top();
 			while (!myStack.empty())
 			{
 				while (pNode != nullptr)
 				{
-
 					myStack.push(pNode);
-					pNode = pNode->m_pLeft;
+					pNode = pNode->m_left;
 				}
 				if (!myStack.empty())
 				{
 					pNode = myStack.top();
 					retQueue.push(pNode);
 					myStack.pop();
-					pNode = pNode->m_pRight;
+					pNode = pNode->m_right;
 				}
 			}
-			retQueue.pop();
+			//retQueue.pop();
 			return retQueue;
 		}
 
@@ -251,11 +252,11 @@ namespace Sdalin {
 			Stack<Node*> myStack;
 			Stack<Node*> myStack2;
 			Queue<Node*> retQueue;
-			if (m_root->m_pParent == nullptr)
+			if (root() == nullptr)
 			{
 				return retQueue;
 			}
-			myStack.push(m_root->m_pParent);
+			myStack.push(root());
 			Node* pNode = myStack.top();
 			while (!myStack.empty())
 			{
@@ -263,14 +264,14 @@ namespace Sdalin {
 				{
 					myStack.push(pNode);
 					myStack2.push(pNode);
-					pNode = pNode->m_pRight;
+					pNode = pNode->m_right;
 				}
 
 				if (!myStack.empty())
 				{
 					pNode = myStack.top();
 					myStack.pop();
-					pNode = pNode->m_pLeft;
+					pNode = pNode->m_left;
 					
 				}
 			}
@@ -283,34 +284,112 @@ namespace Sdalin {
 		}
 
 	private:
-		void erase(const Node* node)
+		void erase(Node* node)
 		{
-			Node* maxLeftNode = node->m_pLeft;
+			Node* maxLeftNode = node->m_left;
 			if (maxLeftNode == nullptr)
 			{
-				node->m_data = node->m_pRight->m_data;
-				node->m_pRight = node->m_pRight->m_pRight;
-				node->m_pLeft = node->m_pRight->m_pLeft;
-				delete node->m_pRight;
+				if(node->m_right != nullptr)
+				{
+					// node only has right child
+					node->m_data = node->m_right->m_data;
+					node->m_right = node->m_right->m_right;
+					node->m_left = node->m_right->m_left;
+					delete node->m_right;
+					return;
+				}
+				else
+				{
+					// node is leaf node
+					if (node == node->m_parent->m_left)
+						node->m_parent->m_left = nullptr;
+					else
+						node->m_parent->m_right = nullptr;
+					delete node;
+					return;
+				}
 			}
-			while (maxLeftNode->m_pRight != nullptr)
+			while (maxLeftNode->m_right != nullptr)
 			{
-				maxLeftNode = maxLeftNode->m_pRight;
+				// search max left child
+				maxLeftNode = maxLeftNode->m_right;
 			}
-			if (maxLeftNode->m_pParent == node)
+			if (maxLeftNode->m_parent == node)
 			{
+				// max_left_child's parent is node
 				node->m_data = maxLeftNode->m_data;
-				node->m_pRight = maxLeftNode->m_pRight;
-				node->m_pLeft = maxLeftNode->m_pLeft;
+				node->m_right = maxLeftNode->m_right;
+				node->m_left = maxLeftNode->m_left;
 				delete maxLeftNode;
 			}
 			else
 			{
+				// max_left_child's parent is not node
 				node->m_data = maxLeftNode->m_data;
-				maxLeftNode->m_pParent->m_pRight = maxLeftNode->m_pLeft;
-				maxLeftNode->m_pLeft->m_pParent = maxLeftNode->m_pParent;
+				maxLeftNode->m_parent->m_right = maxLeftNode->m_left;
+				maxLeftNode->m_left->m_parent = maxLeftNode->m_parent;
 				delete maxLeftNode;
 			}
+		}
+
+		Node*& root()
+		{
+			return m_root->m_parent;
+		}
+
+		void lRotate(Node* node)
+		{
+			Node* pnode = node->m_right;
+			node->m_right = pnode->m_left;
+
+			if (pnode->m_left != nullptr)
+			{
+				pnode->m_left->m_parent = node;
+			}
+
+			pnode->m_parent = node->m_parent;
+
+			if (node == root())
+			{
+				root() = pnode;
+			}
+			else if (node == node->m_parent->m_left)
+			{
+				node->m_parent->m_left = pnode;
+			}
+			else
+			{
+				node->m_parent->m_right = pnode;
+			}
+
+			pnode->m_left = node;
+			node->m_parent = pnode;
+		}
+
+		void rRotata(Node* node)
+		{
+			Node* pnode = node->m_left;
+			node->m_left = pnode->m_right;
+
+			if (pnode->m_right != nullptr)
+				pnode->m_right->m_parent = node;
+			pnode->m_parent = node->m_parent;
+
+			if (node == root())
+			{
+				root() = pnode;
+			}
+			else if (node == node->m_parent->m_right)
+			{
+				node->m_parent->m_right = pnode;
+			}
+			else
+			{
+				node->m_parent->m_left = pnode;
+			}
+
+			pnode->m_right = node;
+			node->m_parent = pnode;
 		}
 	};
 }
