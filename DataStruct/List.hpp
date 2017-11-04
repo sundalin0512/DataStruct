@@ -15,7 +15,8 @@ namespace Sdalin
 			{
 				
 			}
-			Node(const T& data)
+
+			explicit Node(const T& data)
 				: m_pNext(nullptr), m_pPre(nullptr), m_data(data)
 			{
 				
@@ -108,7 +109,7 @@ namespace Sdalin
 		// capacity:
 		size_t size() const noexcept;
 
-		size_t max_size() const noexcept;
+		static size_t max_size() noexcept;
 
 		void      resize(size_t sz);
 
@@ -132,7 +133,7 @@ namespace Sdalin
 
 		iterator erase(iterator position);
 		iterator erase(iterator first, iterator last);
-		void     swap(List<T>& right);
+		void     swap(List<T>& right) noexcept;
 		void     clear() noexcept;
 
 
@@ -168,13 +169,6 @@ namespace Sdalin
 
 	}
 
-	//template<class T>
-	//List<T>::iterator::operator typename List<T>::Node*() const
-	//{
-	//	return node;
-	//}
-
-
 	// construct/copy/destroy:
 	template<class T>
 	List<T>::List()
@@ -186,13 +180,13 @@ namespace Sdalin
 	}
 
 	template<class T>
-	List<T>::List(int n) : List()
+	List<T>::List(const int n) : List()
 	{
 		insert(end(), n, T());
 	}
 
 	template<class T>
-	List<T>::List(size_t n, const T & value) : List()
+	List<T>::List(const size_t n, const T & value) : List()
 	{
 		insert(end(), n, value);
 	}
@@ -216,7 +210,7 @@ namespace Sdalin
 	}
 
 	template<class T>
-	void List<T>::assign(size_t n, const T & t)
+	void List<T>::assign(const size_t n, const T & t)
 	{
 		erase(begin(), end());
 		insert(end(), n, t);
@@ -255,13 +249,13 @@ namespace Sdalin
 	}
 
 	template<class T>
-	size_t List<T>::max_size() const noexcept
+	size_t List<T>::max_size() noexcept
 	{
 		return (size_t() - 1) / sizeof(T);
 	}
 
 	template<class T>
-	void List<T>::resize(size_t sz)
+	void List<T>::resize(const size_t sz)
 	{
 		resize(sz, T());
 		//if (size() > sz)
@@ -282,7 +276,7 @@ namespace Sdalin
 	}
 
 	template<class T>
-	void List<T>::resize(size_t sz, const T & c)
+	void List<T>::resize(const size_t sz, const T & c)
 	{
 		if (size() > sz)
 		{
@@ -370,7 +364,7 @@ namespace Sdalin
 	}
 
 	template<class T>
-	typename List<T>::iterator List<T>::insert(typename List<T>::iterator position, size_t n, const T & x)
+	typename List<T>::iterator List<T>::insert(const typename List<T>::iterator position, const size_t n, const T & x)
 	{
 		typename List<T>::iterator ret;
 		for (size_t i = 0; i < n; i++)
@@ -388,7 +382,7 @@ namespace Sdalin
 		auto ret = position->m_pNext;
 		position->m_pNext->m_pPre = position->m_pPre;
 		position->m_pPre->m_pNext = position->m_pNext;
-		delete (Node*)position;
+		delete static_cast<Node*>(position);
 		m_size--;
 		return ret;
 	}
@@ -405,7 +399,7 @@ namespace Sdalin
 		first->m_pPre->m_pNext = last;
 		for (auto iter = first; iter != last;)
 		{
-			delete (Node*)iter++;
+			delete static_cast<Node*>(iter++);
 			m_size--;
 		}
 		//delete (Node*)first;
@@ -413,7 +407,7 @@ namespace Sdalin
 	}
 
 	template<class T>
-	void List<T>::swap(List<T>& right)
+	void List<T>::swap(List<T>& right) noexcept
 	{
 		auto temp = right;
 		right = *this;
@@ -425,7 +419,7 @@ namespace Sdalin
 	{
 		for (auto iter = begin(); iter != end();)
 		{
-			delete (Node*)iter++;
+			delete static_cast<Node*>(iter++);
 		}
 		m_size = 0;
 		m_node.m_pNext = &m_node;

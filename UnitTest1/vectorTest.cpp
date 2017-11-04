@@ -96,7 +96,7 @@ namespace VectorTest
 		}
 		TEST_METHOD(InsertTest)
 		{
-			size_t size = vec.size();
+			const size_t size = vec.size();
 			vec.insert(3, 12);
 			Assert::AreEqual(12, vec[3]);
 			Assert::AreEqual(3, vec[4]);
@@ -104,7 +104,7 @@ namespace VectorTest
 		}
 		TEST_METHOD(InsertNTest)
 		{
-			size_t size = vec.size();
+			const size_t size = vec.size();
 			vec.insert(3, 2, 12);
 			Assert::AreEqual(12, vec[3]);
 			Assert::AreEqual(12, vec[4]);
@@ -113,7 +113,7 @@ namespace VectorTest
 		}
 		TEST_METHOD(EraseTest)
 		{
-			size_t size = vec.size();
+			const size_t size = vec.size();
 			vec.erase(4);
 			Assert::AreEqual(3, vec[3]);
 			Assert::AreEqual(5, vec[4]);
@@ -121,7 +121,7 @@ namespace VectorTest
 		}
 		TEST_METHOD(EraseNTest)
 		{
-			size_t size = vec.size();
+			const size_t size = vec.size();
 			vec.erase(4, 6);
 			Assert::AreEqual(3, vec[3]);
 			Assert::AreEqual(6, vec[4]);

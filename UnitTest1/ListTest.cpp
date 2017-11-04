@@ -38,7 +38,7 @@ namespace ListTest
 		{
 			vec.assign(12, 3);
 			Assert::AreEqual(size_t(12), vec.size());
-			for (Sdalin::List<int>::iterator i = vec.begin(); i != vec.end(); i++)
+			for (Sdalin::List<int>::iterator i = vec.begin(); i != vec.end(); ++i)
 			{
 				Assert::AreEqual(3, *i);
 			}
@@ -53,10 +53,10 @@ namespace ListTest
 			vec.resize(20, 55);
 			Assert::AreEqual(size_t(20), vec.size());
 			Sdalin::List<int>::iterator i = vec.begin();
-			for (size_t count = 0; count != 18; i++, count++);
+			for (size_t count = 0; count != 18; ++i, count++) {}
 			Assert::AreEqual(55, *i);
 			i = vec.begin();
-			for (size_t count = 0; count != 3; i++, count++);
+			for (size_t count = 0; count != 3; ++i, count++) {}
 			Assert::AreNotEqual(55, *i);
 		}
 		TEST_METHOD(EmptyTest)
@@ -133,62 +133,62 @@ namespace ListTest
 		}
 		TEST_METHOD(InsertTest)
 		{
-			size_t size = vec.size();
+			const size_t size = vec.size();
 			Sdalin::List<int>::iterator i = vec.begin();
-			for (size_t count = 0; count != 3; i++, count++);
+			for (size_t count = 0; count != 3; ++i, count++) {}
 			vec.insert(i, 12);
 			i = vec.begin();
-			for (size_t count = 0; count != 3; i++, count++);
+			for (size_t count = 0; count != 3; ++i, count++) {}
 			Assert::AreEqual(12, *i);
 			i = vec.begin();
-			for (size_t count = 0; count != 4; i++, count++);
+			for (size_t count = 0; count != 4; ++i, count++) {}
 			Assert::AreEqual(3, *i);
 			Assert::AreEqual(size + 1, vec.size());
 		}
 		TEST_METHOD(InsertNTest)
 		{
-			size_t size = vec.size();
+			const size_t size = vec.size();
 			Sdalin::List<int>::iterator i = vec.begin();
-			for (size_t count = 0; count != 3; i++, count++);
+			for (size_t count = 0; count != 3; ++i, count++) {}
 			vec.insert(i, 2, 12);
 			i = vec.begin();
-			for (size_t count = 0; count != 3; i++, count++);
+			for (size_t count = 0; count != 3; ++i, count++) {}
 			Assert::AreEqual(12, *i);
 			i = vec.begin();
-			for (size_t count = 0; count != 4; i++, count++);
+			for (size_t count = 0; count != 4; ++i, count++) {}
 			Assert::AreEqual(12, *i);
 			i = vec.begin();
-			for (size_t count = 0; count != 5; i++, count++);
+			for (size_t count = 0; count != 5; ++i, count++) {}
 			Assert::AreEqual(3, *i);
 			Assert::AreEqual(size + 2, vec.size());
 		}
 		TEST_METHOD(EraseTest)
 		{
-			size_t size = vec.size();
+			const size_t size = vec.size();
 			Sdalin::List<int>::iterator i = vec.begin();
-			for (size_t count = 0; count != 4; i++, count++);
+			for (size_t count = 0; count != 4; ++i, count++) {}
 			vec.erase(i);
 			i = vec.begin();
-			for (size_t count = 0; count != 3; i++, count++);
+			for (size_t count = 0; count != 3; ++i, count++) {}
 			Assert::AreEqual(3, *i);
 			i = vec.begin();
-			for (size_t count = 0; count != 4; i++, count++);
+			for (size_t count = 0; count != 4; ++i, count++) {}
 			Assert::AreEqual(5, *i);
 			Assert::AreEqual(size - 1, vec.size());
 		}
 		TEST_METHOD(EraseNTest)
 		{
-			size_t size = vec.size();
+			const size_t size = vec.size();
 			Sdalin::List<int>::iterator i = vec.begin();
-			for (size_t count = 0; count != 4; i++, count++);
+			for (size_t count = 0; count != 4; ++i, count++) {}
 			Sdalin::List<int>::iterator i2 = vec.begin();
-			for (size_t count = 0; count != 6; i2++, count++);
+			for (size_t count = 0; count != 6; ++i2, count++) {}
 			vec.erase(i, i2);
 			i = vec.begin();
-			for (size_t count = 0; count != 3; i++, count++);
+			for (size_t count = 0; count != 3; ++i, count++) {}
 			Assert::AreEqual(3, *i);
 			i = vec.begin();
-			for (size_t count = 0; count != 4; i++, count++);
+			for (size_t count = 0; count != 4; ++i, count++) {}
 			Assert::AreEqual(6, *i);
 			Assert::AreEqual(size - 2, vec.size());
 		}

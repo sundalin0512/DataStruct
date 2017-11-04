@@ -46,7 +46,7 @@ namespace Sdalin
 
 		// capacity:
 		size_t    size() const noexcept;
-		size_t    max_size() const noexcept;
+		static size_t    max_size() noexcept;
 		void      resize(size_t sz);
 		void      resize(size_t sz, const T& c);
 		size_t    capacity() const noexcept;
@@ -77,7 +77,7 @@ namespace Sdalin
 
 		void       erase(size_t position);
 		void       erase(size_t first, size_t last);
-		void     swap(Vector<T>&);
+		void     swap(Vector<T>&) noexcept;
 		void     clear() noexcept;
 
 	private:
@@ -91,33 +91,33 @@ namespace Sdalin
 	Vector<T>::Vector()
 	{
 		char* ptr = new char[sizeof(T)];
-		m_data = (T*)ptr;
+		m_data = reinterpret_cast<T*>(ptr);
 		m_size = 0;
 		m_capacity = 1;
 	}
 
 	template <class T>
-	Vector<T>::Vector(size_t n)
+	Vector<T>::Vector(const size_t n)
 	{
 		char* ptr = new char[n * sizeof(T)];
 		for (size_t i = 0; i < n; i++)
 		{
 			new (ptr + i * sizeof(T)) T;
 		}
-		m_data = (T*)ptr;
+		m_data = reinterpret_cast<T*>(ptr);
 		m_size = n;
 		m_capacity = n;
 	}
 
 	template <class T>
-	Vector<T>::Vector(size_t n, const T& value)
+	Vector<T>::Vector(const size_t n, const T& value)
 	{
 		char* ptr = new char[n * sizeof(T)];
 		for (size_t i = 0; i < n; i++)
 		{
 			new (ptr + i * sizeof(T)) T(value);
 		}
-		m_data = (T*)ptr;
+		m_data = static_cast<T*>(ptr);
 		m_size = n;
 		m_capacity = n;
 	}
@@ -125,13 +125,13 @@ namespace Sdalin
 	template <class T>
 	Vector<T>::Vector(const Vector<T>& x)
 	{
-		int n = x.size();
+		const int n = x.size();
 		char* ptr = new char[n * sizeof(T)];
 		for (size_t i = 0; i < n; i++)
 		{
 			new (ptr + i * sizeof(T)) T(x[i]);
 		}
-		m_data = (T*)ptr;
+		m_data = static_cast<T*>(ptr);
 		m_size = n;
 		m_capacity = n;
 	}
@@ -143,7 +143,7 @@ namespace Sdalin
 		{
 			m_data[i].~T();
 		}
-		delete[](char*)m_data;
+		delete[]  reinterpret_cast<char*>(m_data);
 	}
 
 	template <class T>
@@ -157,7 +157,7 @@ namespace Sdalin
 	}
 
 	template <class T>
-	void      Vector<T>::assign(size_t n, const T& t)
+	void      Vector<T>::assign(const size_t n, const T& t)
 	{
 		while (m_capacity < n)
 		{
@@ -180,13 +180,13 @@ namespace Sdalin
 	}
 
 	template <class T>
-	size_t    Vector<T>::max_size() const noexcept
+	size_t    Vector<T>::max_size() noexcept
 	{
 		return (size_t() - 1) / sizeof(T);
 	}
 
 	template <class T>
-	void      Vector<T>::resize(size_t sz)
+	void      Vector<T>::resize(const size_t sz)
 	{
 		if (sz < m_size)
 		{
@@ -210,7 +210,7 @@ namespace Sdalin
 	}
 
 	template <class T>
-	void      Vector<T>::resize(size_t sz, const T& c)
+	void      Vector<T>::resize(const size_t sz, const T& c)
 	{
 		if (sz < m_size)
 		{
@@ -246,7 +246,7 @@ namespace Sdalin
 	}
 
 	template <class T>
-	void      Vector<T>::reserve(size_t n)
+	void      Vector<T>::reserve(const size_t n)
 	{
 		if (m_capacity < n)
 		{
@@ -263,9 +263,9 @@ namespace Sdalin
 			{
 				new (ptr + i * sizeof(T)) T;
 			}
-			delete[](char*)m_data;
+			delete[]  reinterpret_cast<char*>(m_data);
 
-			m_data = (T*)ptr;
+			m_data = reinterpret_cast<T*>(ptr);
 			m_size = m_size < n ? m_size : n;
 			m_capacity = n;
 		}
@@ -292,7 +292,7 @@ namespace Sdalin
 	{
 		if (m_capacity > m_size)
 		{
-			size_t n = m_size;
+			const size_t n = m_size;
 			char* ptr = new char[n * sizeof(T)];
 			for (size_t i = 0; i < m_size; i++)
 			{
@@ -302,9 +302,9 @@ namespace Sdalin
 			{
 				m_data[i].~T();
 			}
-			delete[](char*)m_data;
+			delete[] static_cast<char*>(m_data);
 
-			m_data = (T*)ptr;
+			m_data = static_cast<T*>(ptr);
 			m_size = n;
 			m_capacity = n;
 		}
@@ -312,25 +312,25 @@ namespace Sdalin
 
 	// element access:
 	template <class T>
-	T&       Vector<T>::operator[](size_t n)
+	T&       Vector<T>::operator[](const size_t n)
 	{
 		return m_data[n];
 	}
 
 	template <class T>
-	const T& Vector<T>::operator[](size_t n) const
+	const T& Vector<T>::operator[](const size_t n) const
 	{
 		return m_data[n];
 	}
 
 	template <class T>
-	T&       Vector<T>::at(size_t n)
+	T&       Vector<T>::at(const size_t n)
 	{
 		return (*this)[n];
 	}
 
 	template <class T>
-	const T& Vector<T>::at(size_t n) const
+	const T& Vector<T>::at(const size_t n) const
 	{
 		return (*this)[n];
 	}
@@ -386,7 +386,7 @@ namespace Sdalin
 	}
 
 	template <class T>
-	T&       Vector<T>::insert(size_t position, const T& x)
+	T&       Vector<T>::insert(const size_t position, const T& x)
 	{
 		if (m_size == m_capacity)
 		{
@@ -403,7 +403,7 @@ namespace Sdalin
 	}
 
 	template <class T>
-	T&       Vector<T>::insert(size_t position, size_t n, const T& x)
+	T&       Vector<T>::insert(const size_t position, const size_t n, const T& x)
 	{
 		while (m_size + n > m_capacity)
 		{
@@ -423,9 +423,9 @@ namespace Sdalin
 	}
 
 	template <class T>
-	void       Vector<T>::erase(size_t position)
+	void       Vector<T>::erase(const size_t position)
 	{
-		if(position>size())
+		if (position > size())
 		{
 			throw "invalid index";
 		}
@@ -439,9 +439,9 @@ namespace Sdalin
 
 	//²»É¾³ýlast
 	template <class T>
-	void       Vector<T>::erase(size_t first, size_t last)
+	void       Vector<T>::erase(const size_t first, const size_t last)
 	{
-		size_t reduceSize = last - first;
+		const size_t reduceSize = last - first;
 		for (size_t i = first; i < last; i++)
 			m_data[i].~T();
 		size_t count = 0;
@@ -453,7 +453,7 @@ namespace Sdalin
 		m_size -= reduceSize;
 	}
 	template <class T>
-	void     Vector<T>::swap(Vector<T>& t)
+	void     Vector<T>::swap(Vector<T>& t) noexcept
 	{
 		auto temp1 = this->m_capacity;
 		this->m_capacity = t.m_capacity;
