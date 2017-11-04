@@ -37,6 +37,9 @@ namespace Sdalin
 		~Vector();
 		Vector<T>& operator=(const Vector<T>& x);
 
+		/// <summary>
+		/// 将数组中元素替换为n个t
+		/// </summary>
 		void      assign(size_t n, const T& t);
 
 
@@ -72,8 +75,8 @@ namespace Sdalin
 		T&       insert(size_t position, const T& x);
 		T&       insert(size_t position, size_t n, const T& x);
 
-		T&       erase(size_t position);
-		T&       erase(size_t first, size_t last);
+		void       erase(size_t position);
+		void       erase(size_t first, size_t last);
 		void     swap(Vector<T>&);
 		void     clear() noexcept;
 
@@ -164,7 +167,7 @@ namespace Sdalin
 		{
 			(*this)[i] = t;
 		}
-		m_size = t;
+		m_size = n;
 	}
 
 
@@ -173,7 +176,7 @@ namespace Sdalin
 	template <class T>
 	size_t    Vector<T>::size() const noexcept
 	{
-		return m_size();
+		return m_size;
 	}
 
 	template <class T>
@@ -263,7 +266,7 @@ namespace Sdalin
 			delete[](char*)m_data;
 
 			m_data = (T*)ptr;
-			m_size = n;
+			m_size = m_size < n ? m_size : n;
 			m_capacity = n;
 		}
 		else if (n < m_size)
@@ -407,11 +410,11 @@ namespace Sdalin
 			reserve(m_capacity * 2);
 		}
 
-		for (size_t i = m_size; i > position; i--)
+		for (size_t i = m_size + n - 1; i > position + n - 1; i--)
 		{
-			(*this)[i] = (*this)[i - 1];
+			(*this)[i] = (*this)[i - n];
 		}
-		m_size++;
+		m_size += n;
 		for (size_t i = 0; i < n; i++)
 		{
 			new (&m_data[position + i]) T(x);
@@ -420,8 +423,12 @@ namespace Sdalin
 	}
 
 	template <class T>
-	T&       Vector<T>::erase(size_t position)
+	void       Vector<T>::erase(size_t position)
 	{
+		if(position>size())
+		{
+			throw "invalid index";
+		}
 		m_data[position].~T();
 		for (size_t i = position; i < m_size - 1; i++)
 		{
@@ -432,9 +439,10 @@ namespace Sdalin
 
 	//不删除last
 	template <class T>
-	T&       Vector<T>::erase(size_t first, size_t last)
+	void       Vector<T>::erase(size_t first, size_t last)
 	{
-		for(size_t i = first; i < last; i++)
+		size_t reduceSize = last - first;
+		for (size_t i = first; i < last; i++)
 			m_data[i].~T();
 		size_t count = 0;
 		for (size_t i = last; i < m_size; i++)
@@ -442,7 +450,7 @@ namespace Sdalin
 			(*this)[first + count] = (*this)[last + count];
 			count++;
 		}
-		m_size -= count;
+		m_size -= reduceSize;
 	}
 	template <class T>
 	void     Vector<T>::swap(Vector<T>& t)

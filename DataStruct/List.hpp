@@ -72,7 +72,10 @@ namespace Sdalin
 				return node;
 			}
 
-			operator Node*() const;
+			operator Node*() const
+			{
+				return node;
+			}
 		protected:
 			Node* node;
 		};
@@ -165,11 +168,11 @@ namespace Sdalin
 
 	}
 
-	template<class T>
-	List<T>::iterator::operator typename List<T>::Node*() const
-	{
-		return node;
-	}
+	//template<class T>
+	//List<T>::iterator::operator typename List<T>::Node*() const
+	//{
+	//	return node;
+	//}
 
 
 	// construct/copy/destroy:
@@ -260,23 +263,22 @@ namespace Sdalin
 	template<class T>
 	void List<T>::resize(size_t sz)
 	{
-		if (size() > sz)
-		{
-			auto iter = begin();
-			for (size_t i = 0; i < size(); i++)
-				++iter;
-			auto tmp = iter;
-			while (++tmp != end())
-			{
-				erase(tmp);
-				tmp = iter;
-			}
-			erase(iter);
-		}
-		else
-		{
-			insert(end(), sz - size(), T());
-		}
+		resize(sz, T());
+		//if (size() > sz)
+		//{
+		//	auto iter = begin();
+		//	for (size_t i = 0; i < sz; i++)
+		//		++iter;
+		//	while (iter != end())
+		//	{
+		//		iter = erase(iter);
+		//	}
+		//	erase(iter);
+		//}
+		//else
+		//{
+		//	insert(end(), sz - size(), T());
+		//}
 	}
 
 	template<class T>
@@ -285,15 +287,13 @@ namespace Sdalin
 		if (size() > sz)
 		{
 			auto iter = begin();
-			for (size_t i = 0; i < size(); i++)
+			for (size_t i = 0; i < sz; i++)
 				++iter;
-			auto tmp = iter;
-			while (++tmp != end())
+			while (iter != end())
 			{
-				erase(tmp);
-				tmp = iter;
+				iter = erase(iter);
 			}
-			erase(iter);
+			//erase(iter);
 		}
 		else
 		{
@@ -383,6 +383,8 @@ namespace Sdalin
 	template<class T>
 	typename List<T>::iterator List<T>::erase(typename List<T>::iterator position)
 	{
+		if (position == &m_node)
+			throw "invalid iterator";
 		auto ret = position->m_pNext;
 		position->m_pNext->m_pPre = position->m_pPre;
 		position->m_pPre->m_pNext = position->m_pNext;
@@ -398,16 +400,15 @@ namespace Sdalin
 		{
 			return nullptr;
 		}
-		auto ret = last->m_pNext;
-		last->m_pNext->m_pPre = first->m_pPre;
-		first->m_pPre->m_pNext = last->m_pNext;
+		auto ret = last;
+		last->m_pPre = first->m_pPre;
+		first->m_pPre->m_pNext = last;
 		for (auto iter = first; iter != last;)
 		{
-			delete (Node*)++iter;
+			delete (Node*)iter++;
 			m_size--;
 		}
-		delete (Node*)first;
-		m_size--;
+		//delete (Node*)first;
 		return ret;
 	}
 
@@ -424,9 +425,8 @@ namespace Sdalin
 	{
 		for (auto iter = begin(); iter != end();)
 		{
-			delete (Node*)++iter;
+			delete (Node*)iter++;
 		}
-		delete (Node*)begin();
 		m_size = 0;
 		m_node.m_pNext = &m_node;
 		m_node.m_pPre = &m_node;
