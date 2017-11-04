@@ -36,7 +36,6 @@ namespace Sdalin
 
 		~Vector();
 		Vector<T>& operator=(const Vector<T>& x);
-		Vector<T>& operator=(Vector<T>&& x);
 
 		void      assign(size_t n, const T& t);
 
