@@ -6,7 +6,7 @@
 
 namespace Sdalin {
 	template<class T>
-	class BTree
+	class Tree
 	{
 
 	public:
@@ -37,12 +37,12 @@ namespace Sdalin {
 		size_t m_size;
 
 	public:
-		BTree()
+		Tree()
 			: m_root(new Node), m_size(0)
 		{
 			root() = nullptr;
 		}
-		BTree(const BTree& other)
+		Tree(const Tree& other)
 		{
 			m_size = 0;
 			Queue<Node*> nodes = other.layer();
@@ -52,7 +52,7 @@ namespace Sdalin {
 				nodes.pop();
 			}
 		}
-		~BTree()
+		~Tree()
 		{
 			Queue<Node*> nodes = layer();
 			while (!nodes.empty())

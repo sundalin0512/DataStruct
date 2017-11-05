@@ -111,7 +111,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="bTree.hpp" />
+    <ClInclude Include="Tree.hpp" />
     <ClInclude Include="Deque.hpp" />
     <ClInclude Include="List.hpp" />
     <ClInclude Include="Queue.hpp" />

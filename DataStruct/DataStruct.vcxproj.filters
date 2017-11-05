@@ -30,7 +30,7 @@
     <ClInclude Include="Deque.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="bTree.hpp">
+    <ClInclude Include="Tree.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

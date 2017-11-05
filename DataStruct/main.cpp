@@ -1,4 +1,4 @@
-#include "bTree.hpp"
+#include "Tree.hpp"
 #include "Vector.hpp"
 using namespace std;
 
@@ -18,7 +18,7 @@ int main()
 	vec.push_back(9);
 	vec.resize(3);
 
-	//Sdalin::BTree<int> a;
+	//Sdalin::Tree<int> a;
 	//a.insert(50);
 	//a.insert(30);
 	//a.insert(60);
@@ -31,10 +31,10 @@ int main()
 	////a.insert(54);
 
 	////DLR: 50  30  10  40  60  55  54  75 
-	//Sdalin::Queue<Sdalin::BTree<int>::Node*> a1 = a.DLR();
+	//Sdalin::Queue<Sdalin::Tree<int>::Node*> a1 = a.DLR();
 	////LDR: 10  30  40  50  54  55  60  75
-	//Sdalin::Queue<Sdalin::BTree<int>::Node*> a2 = a.LDR();
+	//Sdalin::Queue<Sdalin::Tree<int>::Node*> a2 = a.LDR();
 	////LRD: 10  40  30  54  55  75  60  50
-	//Sdalin::Queue<Sdalin::BTree<int>::Node*> a3 = a.LRD();
+	//Sdalin::Queue<Sdalin::Tree<int>::Node*> a3 = a.LRD();
 	return 0;
 }
