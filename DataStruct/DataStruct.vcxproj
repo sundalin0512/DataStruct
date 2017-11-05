@@ -111,6 +111,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="avlTree.hpp" />
     <ClInclude Include="Tree.hpp" />
     <ClInclude Include="Deque.hpp" />
     <ClInclude Include="List.hpp" />

@@ -1,22 +1,22 @@
-#include "Tree.hpp"
-#include "Vector.hpp"
+#include "avlTree.hpp"
 using namespace std;
 
 int main()
 {
-	Sdalin::List<int> vec;
+	Sdalin::avlTree a;
+	a.insert(11);
+	a.insert(12);
+	a.insert(13);
+	a.insert(10);
+	a.insert(9);
+	a.insert(8);
+	a.erase(9);
+	a.erase(8);
 
-	vec.push_back(0);
-	vec.push_back(1);
-	vec.push_back(2);
-	vec.push_back(3);
-	vec.push_back(4);
-	vec.push_back(5);
-	vec.push_back(6);
-	vec.push_back(7);
-	vec.push_back(8);
-	vec.push_back(9);
-	vec.resize(3);
+
+	//
+	Sdalin::Queue<Sdalin::avlTree::Node*> a1 = a.layer();
+
 
 	//Sdalin::Tree<int> a;
 	//a.insert(50);
